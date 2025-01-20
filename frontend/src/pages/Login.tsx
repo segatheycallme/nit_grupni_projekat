@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import authContext from "../main";
+import { authContext } from "../App";
 
 function Login() {
   const setAuth = useContext(authContext)?.setAuth;
