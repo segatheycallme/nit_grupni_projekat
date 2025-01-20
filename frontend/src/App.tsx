@@ -11,17 +11,17 @@ interface ContextType {
 const authContext = createContext<ContextType | null>(null);
 
 function App() {
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState(true);
   return (
     <authContext.Provider value={{ auth, setAuth }}>
       <BrowserRouter>
         <Routes>
           {!auth ?
-            <Route path='/' element={<Login></Login>} />
+            <Route path='/' element={<Login />} />
             :
             <>
-              <Route path='/' element={<Dashboard></Dashboard>} />
-              <Route path='/list' element={<TaskList></TaskList>} />
+              <Route path='/' element={<Dashboard />} />
+              <Route path='/list' element={<TaskList />} />
             </>
           }
         </Routes>
