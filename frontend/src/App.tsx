@@ -16,7 +16,7 @@ function App() {
     <authContext.Provider value={{ auth, setAuth }}>
       <BrowserRouter>
         <Routes>
-          {auth ?
+          {!auth ?
             <Route path='/' element={<Login></Login>} />
             :
             <>
