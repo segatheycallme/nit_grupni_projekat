@@ -1,7 +1,9 @@
 import { useContext } from "react";
 import { authContext } from "../App";
 import Paper from "../components/Paper"
-
+const goToRegister = () => {
+  window.location.href = '/register';
+};
 function Login() {
   const setAuth = useContext(authContext)?.setAuth;
   return (
@@ -22,7 +24,7 @@ function Login() {
         </div>
         <div className="flex flex-col items-center">
           <button className="border-sky-800 border-2 rounded-lg bg-sky-600 hover:bg-sky-500 px-4 py-1 text-white">Login</button>
-          <button className="text-gray-400 text-md m-2 hover:text-gray-500">Dont have an account? Click here</button>
+          <button className="text-gray-400 text-md m-2 hover:text-gray-500" onClick={goToRegister}>Dont have an account? Click here</button>
         </div>
       </Paper>
     </div>
