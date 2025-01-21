@@ -1,18 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Paper from "../components/Paper"
-
-interface Task {
-  message: string
-  status: string
-}
-
-const tasks: Task[] | null =
-  [
-    { message: "do the laundry", status: "To-Do" },
-    { message: "do the bed", status: "Done" },
-    { message: "do the clock", status: "To-Do" },
-    { message: "do the radiator", status: "In Progress" },
-  ]
+import { addTask, deleteTask, getTasks, Task, updateTask } from '../api/task.ts'
 
 const statuses = ["To-Do", "In Progress", "Done"];
 const color_lookup = new Map()
@@ -34,6 +22,14 @@ function cycleStatus(currStatus: string, direction: number) {
 function TaskList() {
   const [editID, setEditID] = useState(-1);
   const [editValue, setEditValue] = useState<string | null>("");
+  const [newTaskMessage, setNewTaskMessage] = useState<string | null>("");
+  const [newTaskStatus, setNewTaskStatus] = useState<string | null>("To-Do");
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [refresh, setRefresh] = useState(false)
+  useEffect(() => {
+    getTasks().then((res) => setTasks(res))
+  }, [])
+
 
   return (
     <div className="flex items-center justify-center h-full">
@@ -53,16 +49,17 @@ function TaskList() {
                   <tr className="text-lg">
                     <td className="border-2">{editID === i ?
                       <div className="flex">
-                        <input type="text" className="bg-slate-200 border border-slate-400 pl-1 w-full" value={editValue || ""} onChange={(e) => setEditValue(e.target.textContent)} />
+                        <input type="text" className="bg-slate-200 border border-slate-400 pl-1 w-full" value={editValue || ""} onChange={(e) => setEditValue(e.target.value)} />
                         <button className="ml-8 mr-2" onClick={() => {
+                          updateTask({ id: task.id, message: editValue || "", status: task.status })
                           setEditID(-1);
                         }}>ok</button>
                       </div>
                       : <span className="pl-1">{task.message}</span>}</td>
                     <td className="text-center border-2">
-                      <button className="font-bold" onClick={() => console.log(cycleStatus(task.status, -1))}>{"<"}</button>
+                      <button className="font-bold" onClick={() => { updateTask({ id: task.id, message: task.message, status: cycleStatus(task.status, -1) }); setRefresh(!refresh) }}>{"<"}</button>
                       <span className={color_lookup.get(task.status)}> {task.status} </span>
-                      <button className="font-bold" onClick={() => console.log(cycleStatus(task.status, +1))}>{">"}</button>
+                      <button className="font-bold" onClick={() => { updateTask({ id: task.id, message: task.message, status: cycleStatus(task.status, +1) }); setRefresh(!refresh) }}>{">"}</button>
                     </td>
                     <td className="text-center border-2">
                       <button className="mr-2" onClick={() => {
@@ -70,11 +67,28 @@ function TaskList() {
                         setEditValue(task.message);
                       }}>e</button>
                       <button onClick={() => {
+                        deleteTask(task);
+                        setRefresh(!refresh);
                       }}>d</button>
                     </td>
                   </tr>
                 )
               })}
+              <tr className="text-lg">
+                <td className="border-2 flex">
+                  <input type="text" className="bg-slate-200 pl-1 w-full" value={newTaskMessage || ""} onChange={(e) => setNewTaskMessage(e.target.value)} />
+                </td>
+                <td className="border-2 text-center">
+                  <button className="font-bold" onClick={() => setNewTaskStatus(cycleStatus(newTaskStatus || "", -1))}>{"<"}</button>
+                  <span className={color_lookup.get(newTaskStatus)}> {newTaskStatus} </span>
+                  <button className="font-bold" onClick={() => setNewTaskStatus(cycleStatus(newTaskStatus || "", +1))}>{">"}</button>
+                </td>
+                <td className="border-2 text-center"><button onClick={() => {
+                  addTask({ id: -1, message: newTaskMessage || "", status: newTaskStatus || "" })
+                  setNewTaskMessage("");
+                  setNewTaskStatus("To-Do");
+                }}>add</button></td>
+              </tr>
             </tbody>
           </table>
           : "no tasks"}
