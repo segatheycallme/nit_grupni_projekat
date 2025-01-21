@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Paper from "../components/Paper"
 import { addTask, deleteTask, getTasks, Task, updateTask } from '../api/task.ts'
+import { authContext } from "../App.tsx";
 
 const statuses = ["To-Do", "In Progress", "Done"];
 const color_lookup = new Map()
@@ -20,6 +21,8 @@ function cycleStatus(currStatus: string, direction: number) {
 }
 
 function TaskList() {
+  const token = useContext(authContext).auth;
+
   const [editID, setEditID] = useState(-1);
   const [editValue, setEditValue] = useState<string | null>("");
   const [newTaskMessage, setNewTaskMessage] = useState<string | null>("");
@@ -27,7 +30,7 @@ function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [refresh, setRefresh] = useState(false)
   useEffect(() => {
-    getTasks().then((res) => setTasks(res))
+    getTasks(token).then((res) => setTasks(res))
   }, [])
 
 
@@ -51,15 +54,15 @@ function TaskList() {
                       <div className="flex">
                         <input type="text" className="bg-slate-200 border border-slate-400 pl-1 w-full" value={editValue || ""} onChange={(e) => setEditValue(e.target.value)} />
                         <button className="ml-8 mr-2" onClick={() => {
-                          updateTask({ id: task.id, message: editValue || "", status: task.status })
+                          updateTask({ id: task.id, message: editValue || "", status: task.status }, token)
                           setEditID(-1);
                         }}>ok</button>
                       </div>
                       : <span className="pl-1">{task.message}</span>}</td>
                     <td className="text-center border-2">
-                      <button className="font-bold" onClick={() => { updateTask({ id: task.id, message: task.message, status: cycleStatus(task.status, -1) }); setRefresh(!refresh) }}>{"<"}</button>
+                      <button className="font-bold" onClick={() => { updateTask({ id: task.id, message: task.message, status: cycleStatus(task.status, -1) }, token); setRefresh(!refresh) }}>{"<"}</button>
                       <span className={color_lookup.get(task.status)}> {task.status} </span>
-                      <button className="font-bold" onClick={() => { updateTask({ id: task.id, message: task.message, status: cycleStatus(task.status, +1) }); setRefresh(!refresh) }}>{">"}</button>
+                      <button className="font-bold" onClick={() => { updateTask({ id: task.id, message: task.message, status: cycleStatus(task.status, +1) }, token); setRefresh(!refresh) }}>{">"}</button>
                     </td>
                     <td className="text-center border-2">
                       <button className="mr-2" onClick={() => {
@@ -67,7 +70,7 @@ function TaskList() {
                         setEditValue(task.message);
                       }}>e</button>
                       <button onClick={() => {
-                        deleteTask(task);
+                        deleteTask(task, token);
                         setRefresh(!refresh);
                       }}>d</button>
                     </td>
@@ -84,7 +87,7 @@ function TaskList() {
                   <button className="font-bold" onClick={() => setNewTaskStatus(cycleStatus(newTaskStatus || "", +1))}>{">"}</button>
                 </td>
                 <td className="border-2 text-center"><button onClick={() => {
-                  addTask({ id: -1, message: newTaskMessage || "", status: newTaskStatus || "" })
+                  addTask({ id: -1, message: newTaskMessage || "", status: newTaskStatus || "" }, token)
                   setNewTaskMessage("");
                   setNewTaskStatus("To-Do");
                 }}>add</button></td>

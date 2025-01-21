@@ -6,13 +6,13 @@ import TaskList from './pages/TaskList';
 import { createContext, useState } from 'react';
 
 interface ContextType {
-  auth: boolean;
-  setAuth: (age: boolean) => void;
+  auth: string;
+  setAuth: (token: string) => void;
 }
-const authContext = createContext<ContextType | null>(null);
+const authContext = createContext<ContextType>({ auth: "", setAuth: () => { } });
 
 function App() {
-  const [auth, setAuth] = useState(true);
+  const [auth, setAuth] = useState("token");
   return (
     <authContext.Provider value={{ auth, setAuth }}>
       <BrowserRouter>

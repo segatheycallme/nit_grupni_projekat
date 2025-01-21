@@ -1,12 +1,7 @@
-import { useContext } from "react";
-import { authContext } from "../App";
+import { NavLink } from "react-router";
 import Paper from "../components/Paper"
 
-const goToLogin = () => {
-  window.location.href = '/';
-};
 function Register() {
-  const setAuth = useContext(authContext)?.setAuth;
   return (
     <div className="text-xl flex items-center justify-center h-full">
       <Paper className="flex flex-col items-center h-2/5   w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
@@ -30,7 +25,7 @@ function Register() {
         </div>
         <div className="flex flex-col items-center">
           <button className="border-sky-800 border-2 rounded-lg bg-sky-600 hover:bg-sky-500 px-4 py-1 text-white">Register</button>
-          <button className="text-gray-400 text-md m-2 hover:text-gray-500" onClick={goToLogin}>Already have an account? Click here</button>
+          <NavLink to="/"> <button className="text-gray-400 text-md m-2 hover:text-gray-500">Already have an account? Click here</button></NavLink>
         </div>
       </Paper>
     </div>
