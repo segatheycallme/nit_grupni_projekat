@@ -11,7 +11,7 @@ interface ContextType {
 const authContext = createContext<ContextType | null>(null);
 
 function App() {
-  const [auth, setAuth] = useState(true);
+  const [auth, setAuth] = useState(false);
   return (
     <authContext.Provider value={{ auth, setAuth }}>
       <BrowserRouter>
