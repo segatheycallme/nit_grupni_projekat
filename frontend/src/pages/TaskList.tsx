@@ -68,11 +68,11 @@ function TaskList() {
                       <button className="mr-2" onClick={() => {
                         setEditID(i);
                         setEditValue(task.message);
-                      }}>e</button>
+                      }}>✎</button>
                       <button onClick={() => {
                         deleteTask(task, token);
                         setRefresh(!refresh);
-                      }}>d</button>
+                      }}>🗑</button>
                     </td>
                   </tr>
                 )

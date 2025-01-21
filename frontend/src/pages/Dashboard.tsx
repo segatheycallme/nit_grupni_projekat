@@ -41,7 +41,7 @@ function Dashboard() {
             return (
               <div className="p-2 text-xl flex justify-between w-full">
                 <span>{task.message}</span>
-                <button className="text-green-700">done</button>
+                <button className="text-green-700">☑</button>
               </div>
             )
           }) :
