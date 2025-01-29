@@ -9,7 +9,7 @@ function Register() {
           <h1 className="text-center text-3xl mt-6">Register</h1>
           <input
             type="text"
-            placeholder="Enter your Username"
+            placeholder="Enter your username"
             required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-sky-500" />
           <input
