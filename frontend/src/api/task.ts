@@ -4,8 +4,9 @@ const BASE_URL = "http://localhost:3000/api"
 
 interface Task {
   id: number,
-  message: string,
+  title: string,
   status: string,
+  priority: string
 }
 
 async function getTasks(token: string): Promise<Task[]> {

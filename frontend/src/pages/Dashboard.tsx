@@ -40,7 +40,7 @@ function Dashboard() {
           {tasks.length ? tasks.map((task) => {
             return (
               <div className="p-2 text-xl flex justify-between w-full">
-                <span>{task.message}</span>
+                <span>{task.title}</span>
                 <button className="text-green-700">☑</button>
               </div>
             )
