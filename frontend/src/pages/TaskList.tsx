@@ -16,7 +16,7 @@ priority_color_lookup.set("Medium", "text-yellow-700");
 priority_color_lookup.set("High", "text-red-700");
 
 
-function cycleStatus(stvar: string, stvari: string[], direction: number) {
+function cycleThing(stvar: string, stvari: string[], direction: number) {
   let idx = stvari.findIndex((el) => el === stvar) + direction;
   if (idx < 0) {
     idx = 2
@@ -68,14 +68,14 @@ function TaskList() {
                       </div>
                       : <span className="pl-1">{task.title}</span>}</td>
                     <td className="text-center border-2">
-                      <button className="font-bold" onClick={() => { updateTask({ ...task, status: cycleStatus(task.status, statuses, -1) }, token).then(() => setRefresh(!refresh)) }}>{"<"}</button>
+                      <button className="font-bold" onClick={() => { updateTask({ ...task, status: cycleThing(task.status, statuses, -1) }, token).then(() => setRefresh(!refresh)) }}>{"<"}</button>
                       <span className={status_color_lookup.get(task.status)}> {task.status} </span>
-                      <button className="font-bold" onClick={() => { updateTask({ ...task, status: cycleStatus(task.status, statuses, +1) }, token).then(() => setRefresh(!refresh)) }}>{">"}</button>
+                      <button className="font-bold" onClick={() => { updateTask({ ...task, status: cycleThing(task.status, statuses, +1) }, token).then(() => setRefresh(!refresh)) }}>{">"}</button>
                     </td>
                     <td className="text-center border-2">
-                      <button className="font-bold" onClick={() => { updateTask({ ...task, status: cycleStatus(task.status, priorities, -1) }, token).then(() => setRefresh(!refresh)) }}>{"<"}</button>
+                      <button className="font-bold" onClick={() => { updateTask({ ...task, priority: cycleThing(task.priority, priorities, -1) }, token).then(() => setRefresh(!refresh)) }}>{"<"}</button>
                       <span className={priority_color_lookup.get(task.priority)}> {task.priority} </span>
-                      <button className="font-bold" onClick={() => { updateTask({ ...task, status: cycleStatus(task.status, priorities, +1) }, token).then(() => setRefresh(!refresh)) }}>{">"}</button>
+                      <button className="font-bold" onClick={() => { updateTask({ ...task, priority: cycleThing(task.priority, priorities, +1) }, token).then(() => setRefresh(!refresh)) }}>{">"}</button>
                     </td>
                     <td className="text-center border-2">
                       <button className="mr-2" onClick={() => {
@@ -95,14 +95,14 @@ function TaskList() {
                   <input type="text" className="bg-slate-200 pl-1 w-full" value={newTaskMessage || ""} onChange={(e) => setNewTaskMessage(e.target.value)} />
                 </td>
                 <td className="border-2 text-center">
-                  <button className="font-bold" onClick={() => setNewTaskStatus(cycleStatus(newTaskStatus || "", statuses, -1))}>{"<"}</button>
+                  <button className="font-bold" onClick={() => setNewTaskStatus(cycleThing(newTaskStatus || "", statuses, -1))}>{"<"}</button>
                   <span className={status_color_lookup.get(newTaskStatus)}> {newTaskStatus} </span>
-                  <button className="font-bold" onClick={() => setNewTaskStatus(cycleStatus(newTaskStatus || "", statuses, +1))}>{">"}</button>
+                  <button className="font-bold" onClick={() => setNewTaskStatus(cycleThing(newTaskStatus || "", statuses, +1))}>{">"}</button>
                 </td>
                 <td className="border-2 text-center">
-                  <button className="font-bold" onClick={() => setNewTaskPriority(cycleStatus(newTaskPriority || "", priorities, -1))}>{"<"}</button>
+                  <button className="font-bold" onClick={() => setNewTaskPriority(cycleThing(newTaskPriority || "", priorities, -1))}>{"<"}</button>
                   <span className={priority_color_lookup.get(newTaskPriority)}> {newTaskPriority} </span>
-                  <button className="font-bold" onClick={() => setNewTaskPriority(cycleStatus(newTaskPriority || "", priorities, +1))}>{">"}</button>
+                  <button className="font-bold" onClick={() => setNewTaskPriority(cycleThing(newTaskPriority || "", priorities, +1))}>{">"}</button>
                 </td>
                 <td className="border-2 text-center"><button onClick={() => {
                   addTask({ id: -1, title: newTaskMessage || "", status: newTaskStatus || "", priority: newTaskPriority || "" }, token).then(() => setRefresh(!refresh))
