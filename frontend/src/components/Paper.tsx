@@ -7,7 +7,7 @@ interface Interfejs {
 
 export default function Paper({ children, className }: Interfejs) {
   return (
-    <div className={"bg-slate-50 shadow-lg p-2 m-1 " + className}>{children}</div>
+    <div className={"bg-white shadow-lg p-2 m-1 " + className}>{children}</div>
   )
 }
 

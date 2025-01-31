@@ -12,7 +12,7 @@ function Register() {
 
   return (
     <div className="text-xl flex items-center justify-center h-full">
-      <Paper className="flex flex-col items-center h-2/5 w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
+      <Paper className="flex flex-col items-center h-min-2/5 w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
         <div className="flex flex-col space-y-4 w-full mb-auto">
           <h1 className="text-center text-3xl mt-6">Register</h1>
           <input
@@ -38,7 +38,7 @@ function Register() {
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-sky-500" />
         </div>
         <div className="flex flex-col items-center">
-          <button className="border-sky-800 border-2 rounded-lg bg-sky-600 hover:bg-sky-500 px-4 py-1 text-white" onClick={() => {
+          <button className="rounded-lg bg-sky-600 hover:bg-sky-500 px-4 py-1 mt-4 text-white" onClick={() => {
             register(username, email, password);
             navigate("/");
           }}>Register</button>

@@ -2,7 +2,7 @@ use std::{error::Error, sync::Arc};
 
 use argon2::Argon2;
 use axum::{
-    extract::{Path, Request, State},
+    extract::{Path, Query, Request, State},
     http::StatusCode,
     middleware::{self, Next},
     response::IntoResponse,
@@ -11,7 +11,7 @@ use axum::{
 };
 use jsonwebtoken::{get_current_timestamp, DecodingKey, EncodingKey, Validation};
 use serde::{Deserialize, Serialize};
-use sqlx::{query, query_as, sqlite::SqlitePoolOptions, SqlitePool};
+use sqlx::{query, query_as, sqlite::SqlitePoolOptions, QueryBuilder, Row, SqlitePool};
 use tokio::net::TcpListener;
 use tower_http::cors::CorsLayer;
 
@@ -65,17 +65,65 @@ async fn hi() -> impl IntoResponse {
 async fn get_tasks(
     State(state): State<Arc<AppState>>,
     Extension(user_id): Extension<i64>,
+    Query(params): Query<GetTasksParams>,
 ) -> impl IntoResponse {
-    let tasks = query_as!(
-        Task,
-        "SELECT id, title, description, priority, status FROM Tasks WHERE user_id=$1;",
-        user_id
-    )
-    .fetch_all(&state.db)
-    .await
-    .unwrap();
+    let mut sql_query = QueryBuilder::new(
+        "SELECT id, title, description, priority, status FROM Tasks WHERE user_id=",
+    );
+    sql_query.push_bind(user_id);
+
+    if let Some(value) = params.search {
+        sql_query
+            .push(" AND Title LIKE ")
+            .push_bind(format!("%{}%", value));
+    }
+    if let Some(value) = params.priority {
+        sql_query.push(" AND Priority=").push_bind(value);
+    }
+    if let Some(value) = params.status {
+        sql_query.push(" AND Status=").push_bind(value);
+    }
+    // if let Some(value) = params.order_by {
+    //     sql_query.push(" ORDER BY ");
+    //     sql_query.push(match value.to_lowercase().as_str() {
+    //         "priority" => "priority",
+    //         "status" => "status",
+    //         _ => "title",
+    //     });
+    //     sql_query.push(if params.descending.unwrap_or_default() {
+    //         " DESC"
+    //     } else {
+    //         " ASC"
+    //     });
+    // }
+
+    sql_query.push(";");
+    let tasks: Vec<Task> = sql_query
+        .build()
+        .fetch_all(&state.db)
+        .await
+        .unwrap()
+        .into_iter()
+        .map(|row| Task {
+            id: Some(row.get("id")),
+            title: row.get("title"),
+            description: Some(row.get("description")),
+            priority: row.get("priority"),
+            status: row.get("status"),
+        })
+        .collect();
     Json::from(tasks)
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+struct GetTasksParams {
+    search: Option<String>,
+    priority: Option<String>,
+    status: Option<String>,
+    // order_by: Option<String>,
+    // descending: Option<bool>,
+}
+
 async fn get_task(
     State(state): State<Arc<AppState>>,
     Extension(user_id): Extension<i64>,

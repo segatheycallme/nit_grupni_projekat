@@ -60,7 +60,7 @@ function TaskList() {
                   <tr className="text-lg">
                     <td className="border-2">{editID === i ?
                       <div className="flex">
-                        <input type="text" className="bg-slate-200 border border-slate-400 pl-1 w-full" value={editValue || ""} onChange={(e) => setEditValue(e.target.value)} />
+                        <input type="text" className="bg-slate-100 border-b border-slate-400 pl-1 w-full" value={editValue || ""} onChange={(e) => setEditValue(e.target.value)} />
                         <button className="ml-8 mr-2" onClick={() => {
                           updateTask({ ...task, title: editValue || "" }, token).then(() => setRefresh(!refresh))
                           setEditID(-1);
@@ -92,7 +92,7 @@ function TaskList() {
               })}
               <tr className="text-lg">
                 <td className="border-2 flex">
-                  <input type="text" className="bg-slate-200 pl-1 w-full" value={newTaskMessage || ""} onChange={(e) => setNewTaskMessage(e.target.value)} />
+                  <input type="text" className="bg-slate-100 pl-1 w-full" value={newTaskMessage || ""} onChange={(e) => setNewTaskMessage(e.target.value)} />
                 </td>
                 <td className="border-2 text-center">
                   <button className="font-bold" onClick={() => setNewTaskStatus(cycleThing(newTaskStatus || "", statuses, -1))}>{"<"}</button>

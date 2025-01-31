@@ -2,15 +2,16 @@ import { NavLink } from "react-router"
 import DashboardCard from "../components/DashboardCard"
 import Paper from "../components/Paper"
 import { useContext, useEffect, useState } from "react"
-import { getTasks, Task } from "../api/task"
+import { getTasks, Task, updateTask } from "../api/task"
 import { authContext } from "../App"
 
 function Dashboard() {
   const token = useContext(authContext).auth;
   const [tasks, setTasks] = useState<Task[]>([])
+  const [refresh, setRefresh] = useState(false)
   useEffect(() => {
     getTasks(token).then((res) => setTasks(res))
-  }, [])
+  }, [refresh])
 
   let todo = 0;
   let inprogress = 0;
@@ -32,16 +33,16 @@ function Dashboard() {
     <div className="flex items-center justify-center h-full">
       <Paper className="w-full sm:w-2/3 flex relative">
         <div className="flex justify-between flex-col gap-2 h-full pr-4 border-r-4">
-          <DashboardCard color="bg-slate-200" num={todo} helper="To-Do" />
-          <DashboardCard color="bg-sky-200" num={inprogress} helper="In Progress" />
-          <DashboardCard color="bg-green-200" num={done} helper="Done" />
+          <DashboardCard color="stroke-slate-300" num={todo} total={tasks.length} helper="To-Do" />
+          <DashboardCard color="stroke-sky-300" num={inprogress} total={tasks.length} helper="In Progress" />
+          <DashboardCard color="stroke-green-300" num={done} total={tasks.length} helper="Done" />
         </div>
         <div className="flex flex-col w-full">
-          {tasks.length ? tasks.map((task) => {
+          {tasks.filter((task) => task.status !== "Done").length ? tasks.filter((task) => task.status !== "Done").map((task) => {
             return (
               <div className="p-2 text-xl flex justify-between w-full">
-                <span>{task.title}</span>
-                <button className="text-green-700">☑</button>
+                <span className={task.status === "In Progress" ? "border-l-4 px-1 border-sky-400" : ""}>{task.title}</span>
+                <button className="text-green-700 font-bold" onClick={() => updateTask({ ...task, status: "Done" }, token).then(() => setRefresh(!refresh))}>☑</button>
               </div>
             )
           }) :
@@ -49,7 +50,7 @@ function Dashboard() {
           }
         </div>
         <NavLink to="/list">
-          <button className="bg-sky-300 text-white text-bold text-xl p-2 px-6 absolute bottom-2 left-1/2 rounded-xl">See all</button>
+          <button className="bg-sky-600 text-white text-bold text-xl px-4 py-1 absolute bottom-2 left-1/2 rounded-lg">See all</button>
         </NavLink>
       </Paper>
     </div>
