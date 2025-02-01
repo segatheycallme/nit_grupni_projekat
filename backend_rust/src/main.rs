@@ -36,7 +36,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .allow_origin(tower_http::cors::Any);
 
     let app = Router::new()
-        .route("/", get(hi))
+        .route("/api/user", get(get_user))
         .route("/api/tasks", get(get_tasks))
         .route("/api/tasks", post(add_task))
         .route("/api/tasks/{id}", get(get_task))
@@ -59,9 +59,28 @@ async fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-async fn hi() -> impl IntoResponse {
-    "aa"
+async fn get_user(
+    State(state): State<Arc<AppState>>,
+    Extension(user_id): Extension<i64>,
+) -> impl IntoResponse {
+    Json::from(
+        query_as!(
+            BlindingUser,
+            "SELECT email, username FROM Users WHERE id=$1",
+            user_id
+        )
+        .fetch_one(&state.db)
+        .await
+        .unwrap(),
+    )
 }
+
+#[derive(Debug, Serialize)]
+struct BlindingUser {
+    username: String,
+    email: String,
+}
+
 async fn get_tasks(
     State(state): State<Arc<AppState>>,
     Extension(user_id): Extension<i64>,
