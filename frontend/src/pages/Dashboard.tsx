@@ -32,16 +32,16 @@ function Dashboard() {
   }
 
   return (
-    <div className="flex items-center justify-center h-full">
-      <Paper className="w-full sm:w-2/3">
+    <div className="flex items-center justify-center flex-col min-h-full">
+      <Paper className="w-full sm:w-2/3 my-24">
         <h1 className="text-xl text-center font-bold mb-1 mt-4 pb-3 w-full border-b-2">Welcome, {user}!</h1>
         <div className="flex relative">
-          <div className="flex justify-between flex-col gap-2 h-full pr-4 border-r-4">
+          <div className="flex justify-between flex-col gap-2 h-full pr-4">
             <DashboardCard color="stroke-slate-300" num={todo} total={tasks.length} helper="To-Do" />
             <DashboardCard color="stroke-sky-300" num={inprogress} total={tasks.length} helper="In Progress" />
             <DashboardCard color="stroke-green-300" num={done} total={tasks.length} helper="Done" />
           </div>
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full border-l-2 relative pb-8">
             {tasks.filter((task) => task.status !== "Done").length ? tasks.filter((task) => task.status !== "Done").map((task) => {
               return (
                 <div className="p-2 text-xl flex justify-between w-full">
@@ -50,12 +50,15 @@ function Dashboard() {
                 </div>
               )
             }) :
-              <span className="text-3xl absolute left-1/2 top-8">All done!</span>
+              <span className="text-3xl w-full text-center mt-4">All done!</span>
             }
+            <NavLink to="/list">
+              <div className="w-full text-center absolute bottom-0">
+                <button className="bg-sky-600 text-white text-bold text-xl px-4 py-1 bottom-2 rounded-lg">See all</button>
+              </div>
+            </NavLink>
           </div>
-          <NavLink to="/list">
-            <button className="bg-sky-600 text-white text-bold text-xl px-4 py-1 absolute bottom-2 left-1/2 rounded-lg">See all</button>
-          </NavLink>
+          <div></div>
         </div>
       </Paper>
     </div>
