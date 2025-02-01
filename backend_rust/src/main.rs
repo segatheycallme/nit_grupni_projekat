@@ -77,11 +77,21 @@ async fn get_tasks(
             .push(" AND Title LIKE ")
             .push_bind(format!("%{}%", value));
     }
-    if let Some(value) = params.priority {
-        sql_query.push(" AND Priority=").push_bind(value);
+    if let Some(unparsed) = params.priority {
+        let priorities = unparsed.split(',').map(|moth| moth.to_string());
+        sql_query
+            .push(" AND Priority IN ")
+            .push_tuples(priorities, |mut b, priority| {
+                b.push_bind(priority);
+            });
     }
-    if let Some(value) = params.status {
-        sql_query.push(" AND Status=").push_bind(value);
+    if let Some(unparsed) = params.status {
+        let statuses = unparsed.split(',').map(|moth| moth.to_string());
+        sql_query
+            .push(" AND Status IN ")
+            .push_tuples(statuses, |mut b, status| {
+                b.push_bind(status);
+            });
     }
     // if let Some(value) = params.order_by {
     //     sql_query.push(" ORDER BY ");
@@ -98,6 +108,7 @@ async fn get_tasks(
     // }
 
     sql_query.push(";");
+    dbg!(sql_query.sql());
     let tasks: Vec<Task> = sql_query
         .build()
         .fetch_all(&state.db)

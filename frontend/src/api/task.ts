@@ -9,8 +9,10 @@ interface Task {
   priority: string
 }
 
-async function getTasks(token: string): Promise<Task[]> {
-  return await ky.get(BASE_URL + "/tasks", { headers: { Authorization: "bearer " + token } }).json()
+async function getTasks(token: string, filterText?: string, priorities?: string[], statuses?: string[]): Promise<Task[]> {
+  const searchParams = { priority: (priorities || ["Low", "Medium", "High"]).join(','), status: (statuses || ["To-Do", "In Progress", "Done"]).join(',') };
+  console.log(searchParams.priority)
+  return await ky.get(`${BASE_URL}/tasks?search=${filterText || ''}&priority=${searchParams.priority}&status=${searchParams.status}`, { headers: { Authorization: "bearer " + token } }).json()
 }
 async function addTask(task: Task, token: string) {
   await ky.post(BASE_URL + "/tasks", { json: task, headers: { Authorization: "bearer " + token } })
