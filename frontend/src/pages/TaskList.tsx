@@ -31,8 +31,10 @@ function TaskList() {
   const token = useContext(authContext).auth;
 
   const [editID, setEditID] = useState(-1);
-  const [editValue, setEditValue] = useState<string | null>("");
-  const [newTaskMessage, setNewTaskMessage] = useState<string | null>("");
+  const [editValueTitle, setEditValueTitle] = useState<string | null>("");
+  const [editValueDescription, setEditValueDescription] = useState<string | null>("");
+  const [newTaskTitle, setNewTaskTitle] = useState<string | null>("");
+  const [newTaskDescription, setNewTaskDescription] = useState<string | null>("");
   const [newTaskStatus, setNewTaskStatus] = useState<string | null>("To-Do");
   const [newTaskPriority, setNewTaskPriority] = useState<string | null>("Low");
   const [searchText, setSearchText] = useState<string | null>("");
@@ -76,6 +78,7 @@ function TaskList() {
               <thead>
                 <tr>
                   <th className="border-2 w-max">Task title</th>
+                  <th className="border-2 w-max">Task message</th>
                   <th className="border-2 w-max px-6 sm:w-40">Status</th>
                   <th className="border-2 w-max px-4 sm:w-40">Priority</th>
                   <th className="border-2 w-max px-2 sm:w-24">Action</th>
@@ -87,13 +90,22 @@ function TaskList() {
                     <tr className="text-lg">
                       <td className="border-2">{editID === i ?
                         <div className="flex">
-                          <input type="text" className="bg-slate-100 border-b border-slate-400 pl-1 w-full" value={editValue || ""} onChange={(e) => setEditValue(e.target.value)} />
+                          <input type="text" className="bg-slate-100 border-b border-slate-400 pl-1 w-full" value={editValueTitle || ""} onChange={(e) => setEditValueTitle(e.target.value)} />
                           <button className="ml-8 mr-2" onClick={() => {
-                            updateTask({ ...task, title: editValue || "" }, token).then(() => setRefresh(!refresh))
+                            updateTask({ ...task, title: editValueTitle || "" }, token).then(() => setRefresh(!refresh))
                             setEditID(-1);
                           }}>ok</button>
                         </div>
                         : <span className="pl-1">{task.title}</span>}</td>
+                      <td className="border-2">{editID === i ?
+                        <div className="flex">
+                          <input type="text" className="bg-slate-100 border-b border-slate-400 pl-1 w-full" value={editValueDescription || ""} onChange={(e) => setEditValueDescription(e.target.value)} />
+                          <button className="ml-8 mr-2" onClick={() => {
+                            updateTask({ ...task, description: editValueDescription || "" }, token).then(() => setRefresh(!refresh))
+                            setEditID(-1);
+                          }}>ok</button>
+                        </div>
+                        : <span className="pl-1">{task.description}</span>}</td>
                       <td className="text-center border-2">
                         <button className="font-bold" onClick={() => { updateTask({ ...task, status: cycleThing(task.status, statuses, -1) }, token).then(() => setRefresh(!refresh)) }}>{"<"}</button>
                         <span className={status_color_lookup.get(task.status)}> {task.status} </span>
@@ -107,7 +119,8 @@ function TaskList() {
                       <td className="text-center border-2">
                         <button className="mr-2" onClick={() => {
                           setEditID(i);
-                          setEditValue(task.title);
+                          setEditValueTitle(task.title);
+                          setEditValueDescription(task.description || "");
                         }}>✎</button>
                         <button onClick={() => {
                           deleteTask(task, token).then(() =>
@@ -118,8 +131,11 @@ function TaskList() {
                   )
                 })}
                 <tr className="text-lg">
-                  <td className="border-2 flex">
-                    <input type="text" className="bg-slate-100 pl-1 w-full" value={newTaskMessage || ""} onChange={(e) => setNewTaskMessage(e.target.value)} />
+                  <td className="border-2">
+                    <input type="text" className="bg-slate-100 pl-1 w-full" value={newTaskTitle || ""} onChange={(e) => setNewTaskTitle(e.target.value)} />
+                  </td>
+                  <td className="border-2">
+                    <input type="text" className="bg-slate-100 pl-1 w-full" value={newTaskDescription || ""} onChange={(e) => setNewTaskDescription(e.target.value)} />
                   </td>
                   <td className="border-2 text-center">
                     <button className="font-bold" onClick={() => setNewTaskStatus(cycleThing(newTaskStatus || "", statuses, -1))}>{"<"}</button>
@@ -132,8 +148,9 @@ function TaskList() {
                     <button className="font-bold" onClick={() => setNewTaskPriority(cycleThing(newTaskPriority || "", priorities, +1))}>{">"}</button>
                   </td>
                   <td className="border-2 text-center"><button onClick={() => {
-                    addTask({ id: -1, title: newTaskMessage || "", status: newTaskStatus || "", priority: newTaskPriority || "" }, token).then(() => setRefresh(!refresh))
-                    setNewTaskMessage("");
+                    addTask({ id: -1, title: newTaskTitle || "", status: newTaskStatus || "", priority: newTaskPriority || "", description: newTaskDescription || "" }, token).then(() => setRefresh(!refresh))
+                    setNewTaskTitle("");
+                    setNewTaskDescription("");
                     setNewTaskStatus("To-Do");
                     setNewTaskPriority("Low");
                   }}>add</button></td>

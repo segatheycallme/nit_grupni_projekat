@@ -6,7 +6,8 @@ interface Task {
   id: number,
   title: string,
   status: string,
-  priority: string
+  priority: string,
+  description?: string
 }
 
 interface User {
