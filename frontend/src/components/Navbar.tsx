@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { authContext } from "../App";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { NavLink } from "react-router";
 
 export default function Navbar() {
   const { auth, setAuth } = useContext(authContext);
-  const navigate = useNavigate();
   let [page, setPage] = useState("")
   const location = useLocation();
 

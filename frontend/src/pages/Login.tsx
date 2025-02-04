@@ -15,13 +15,14 @@ function Login() {
       <Paper className="flex flex-col items-center h-min-1/3 w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
         <form onSubmit={(e) => {
           e.preventDefault();
-          navigate("/dashboard");
           login(email, password).then((res) => {
+            navigate("/dashboard");
             setAuth(res.token)
-          }).catch(() => console.log("aaa")).finally(() => {
+          }).catch(() => {
+            setError("Invalid email or password")
+          }).finally(() => {
             setEmail("");
             setPassword("");
-            setError("Invalid email or password")
           });
         }}>
           <div className="flex flex-col space-y-4 w-full mb-auto">
