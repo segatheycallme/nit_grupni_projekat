@@ -3,8 +3,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import TaskList from './pages/TaskList';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import Navbar from './components/Navbar.tsx'
+import { useLocation } from 'react-router';
 
 interface ContextType {
   auth: string;
@@ -21,12 +22,12 @@ function App() {
         <Routes>
           {!auth ?
             <>
-              <Route path='/register' element={<Register />} />
               <Route path='/*' element={<Login />} />
+              <Route path='/register' element={<Register />} />
             </>
             :
             <>
-              <Route path='/' element={<Dashboard />} />
+              <Route path='/*' element={<Dashboard />} />
               <Route path='/list' element={<TaskList />} />
             </>
           }
