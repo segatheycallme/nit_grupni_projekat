@@ -4,6 +4,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import TaskList from './pages/TaskList';
 import { createContext, useState } from 'react';
+import Navbar from './components/Navbar.tsx'
 
 interface ContextType {
   auth: string;
@@ -16,6 +17,7 @@ function App() {
   return (
     <authContext.Provider value={{ auth, setAuth }}>
       <BrowserRouter>
+        <Navbar />
         <Routes>
           {!auth ?
             <>
