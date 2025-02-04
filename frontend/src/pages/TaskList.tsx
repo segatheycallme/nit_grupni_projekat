@@ -78,7 +78,7 @@ function TaskList() {
               <thead>
                 <tr>
                   <th className="border-2 w-max">Task title</th>
-                  <th className="border-2 w-max">Task message</th>
+                  <th className="border-2 w-max">Task description</th>
                   <th className="border-2 w-max px-6 sm:w-40">Status</th>
                   <th className="border-2 w-max px-4 sm:w-40">Priority</th>
                   <th className="border-2 w-max px-2 sm:w-24">Action</th>
