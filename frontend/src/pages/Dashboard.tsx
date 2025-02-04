@@ -54,7 +54,7 @@ function Dashboard() {
             }
             <NavLink to="/list">
               <div className="w-full text-center absolute bottom-0">
-                <button className="bg-sky-600 text-white text-bold text-xl px-4 py-1 bottom-2 rounded-lg">See all</button>
+                <button className="bg-sky-600 hover:bg-sky-500 text-white text-bold text-xl px-4 py-1 bottom-2 rounded-lg">See all</button>
               </div>
             </NavLink>
           </div>
