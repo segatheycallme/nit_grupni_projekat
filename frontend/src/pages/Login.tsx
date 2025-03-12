@@ -26,7 +26,7 @@ function Login() {
           });
         }}>
           <div className="flex flex-col space-y-4 w-full mb-auto">
-            <h1 className="text-center text-3xl mt-6">Login</h1>
+            <h1 className="text-center text-3xl mt-6">Log in</h1>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
